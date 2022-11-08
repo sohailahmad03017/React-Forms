@@ -72,34 +72,44 @@ const signInUser = ({ email, password }) => {
 // } 
 
 
-let sendData = (data , nodeName)=>{
-   return new Promise((resolve, reject) => {
+let sendData = (data, nodeName) => {
+  return new Promise((resolve, reject) => {
     const postListRef = ref(db, `${nodeName}/`);
     const newPostRef = push(postListRef);
     set(newPostRef, data)
-    .then(()=>{
+      .then(() => {
         resolve("Data Sent Successfully")
-    }) 
-    .catch((error)=>{
+      })
+      .catch((error) => {
         reject(error)
+      })
+  })
+}
+
+let sendDataWithId = (nodeName, data) => {
+  return new Promise((resolve, reject) => {
+    const postListRef = ref(db, `${nodeName}/`);
+    const newPostRef = push(postListRef);
+    data.id = push(postListRef).key;
+    set(newPostRef, data)
+      .then(() => {
+        resolve("Data Sent Successfully")
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+let getData = (nodeName) => {
+  return new Promise((resolve, reject) => {
+    const starCountRef = ref(db, `${nodeName}/`);
+    onValue(starCountRef, (snapshot) => {
+      const data = Object.values(snapshot.val());
+      data ? resolve(data) : reject("Data not Found");
     })
-    })   
-}
-let sendDataWithId = (data , nodeName)=>{
-    return new Promise((resolve, reject) => {
-        const postListRef = ref(db, `${nodeName}/`);
-        const newPostRef = push(postListRef);
-        data.id = push(postListRef).key;
-        set(newPostRef, data)
-        .then(()=>{
-            resolve("Data Sent Successfully")
-        }) 
-        .catch((error)=>{
-            reject(error)
-        })
-        }) 
-   
+  })
+
 }
 
-
-export { signUpUser, signInUser, sendData, sendDataWithId }
+export { signUpUser, signInUser, sendData, sendDataWithId, getData }

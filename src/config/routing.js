@@ -4,6 +4,8 @@ import Navbar from '../Components/Navbar/Navbar';
 import SignIn from '../Components/SignIn';
 import SignUp from '../Components/SignUp';
 import CourseForm from '../FormScreens/CourseForm';
+import Dashboard from '../FormScreens/Dashboard';
+import Home from '../FormScreens/Home';
 import QuizForm from '../FormScreens/QuizForm';
 import ResultUpdate from '../FormScreens/ResultUpdate';
 import StudentRegistration from '../FormScreens/StudentRegistration';
@@ -11,36 +13,46 @@ export default function AppRouter() {
 
   const [links, setLinks] = useState([
     {
-      to: '/',
-      label: 'Registration',
+      to: 'studentRegistration',
+      label: 'Student Registration'
     },
     {
-      to: 'courseForm',
-      label: 'Course'
-    },
-    {
-      to: 'quizForm',
-      label:'Quiz Questions'
-    },
-    {
-      to:'resultUpdate',
-      label:'Result Update'
+      to: 'dashboard',
+      label: 'Dashboard'
     }
   ])
+  // const [links, setLinks] = useState([
+  //   {
+  //     to: '/',
+  //     label: 'Registration',
+  //   },
+  //   {
+  //     to: 'courseForm',
+  //     label: 'Course'
+  //   },
+  //   {
+  //     to: 'quizForm',
+  //     label:'Quiz Questions'
+  //   },
+  //   {
+  //     to:'resultUpdate',
+  //     label:'Result Update'
+  //   }
+  // ])
 
   return (
     <>
-        <BrowserRouter>
+      <BrowserRouter>
 
-            <Navbar links={links} />
+        <Navbar links={links} />
 
-            <Routes>
-                <Route path='/' element={<StudentRegistration/>}></Route>
-                <Route path='courseForm' element={<CourseForm/>}></Route>
-                <Route path='quizForm' element={<QuizForm/>}></Route>
-                <Route path='resultUpdate' element={<ResultUpdate/>}></Route>
-            </Routes>
-        </BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Home />}></Route>
+          <Route path='studentRegistration' element={<StudentRegistration />} />
+          <Route path='dashboard/*' element={<Dashboard />}></Route>
+        </Routes>
+
+      </BrowserRouter>
     </>
 
   )

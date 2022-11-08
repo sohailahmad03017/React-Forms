@@ -1,89 +1,206 @@
+import { Button, Grid, TextField, Typography } from '@mui/material'
+import { Box, Container } from '@mui/system'
 import React, { useEffect, useState } from 'react'
-import Input from '../Components/Input'
-import { Container,Grid , Typography } from '@mui/material'
-import BButton from '../Components/BButton'
-import Dropdown from '../Components/Dropdown'
-import CheckBox from '../Components/CheckBox'
-import { sendData } from '../config/firebaseMethods'
-import { getDatabase, ref, onValue} from "firebase/database";
+import SSelect from '../Components/FormComponents/SSelect'
+import STextField from '../Components/FormComponents/STextField';
+import CircularProgress from '@mui/material/CircularProgress';
+import { getData, sendDataWithId } from '../config/firebaseMethods';
+import { dateExtract } from '../config/core/basic';
+import RegisteredStudent from './RegisteredStudent';
 
-export default function AdminCourses() {
-  const db = getDatabase()
-  let[obj , setObj] = useState({});
-  let[duration , setDuration] = useState(["8 months","10 months","12 months" , "14 months " , "16 months"])
-  let[quiz , setQuiz] = useState([6 , 8 , 10 ,12 , 14 , 16])
-  let[show , setShow] = useState(false)
-  let[data , setData] = useState([])
+export default function CourseForm() {
 
+  let [model, setModel] = useState({});
+  let [receivedCourses, setReceivedCourses] = useState([]);
+  let [assistantTrainers, setAssistantTrainers] = useState([]);
+  let [assistantTrainer, setAssistantTrainer] = useState('');
+  let [isLoading, setIsLoading] = useState(false);
+  let [isSubmitted, setIsSubmitted] = useState(false);
 
-  let fillObject = (key , val)=>{
-obj[key] = val;
-setObj({...obj})
+  const fillData = (key, data) => {
+    model[key] = data;
+    setModel({ ...model })
   }
-  let add=()=>{
-    sendData(obj , "courses")
-    .then((success)=>{
-      console.log(success)
-    })
-    .catch((error)=>{
-      console.log(error)
-    }) 
-  }
-  let showBox=()=>{
-    setShow(true)
-  } 
-  let getData = ()=>{
-    const starCountRef = ref(db, "courses/" );
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
-     setData(Object.values(data))
-    })
-  }
-  useEffect(()=>{
-    getData()
-  },[])
+
   
+  //Sending data in database
+  const submitForm = () => {
+    setIsLoading(true)
+    model.assistantTrainers = assistantTrainers;
+    setAssistantTrainers([]);
+
+    sendDataWithId('Courses', model)
+      .then((success) => {
+        setIsLoading(false);
+        setIsSubmitted(true);
+        receiveCourses();
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      })
+  }
+
+  //Receiving Data from Database
+  const receiveCourses = () => {
+    getData('Courses')
+    .then((success)=>{
+      setReceivedCourses([...success])
+    })
+    .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    receiveCourses();
+  },[])
+
   return (
-    <div>
-       <Container maxWidth="sm" sx={{ textAlign: "center"}}>
-                <Grid container spacing={3} >
-                <Grid item xs={12} md={12} sm={12} lg={12} >
-                <Typography m={3} variant="h4">Courses Detail</Typography>
-                {data && data.length > 0 ? data.map((obj)=>{
-                 return<div> <Grid sx={{ marginY: "30px", padding: "30px", backgroundColor: "white", boxShadow: "5px 5px 30px lightgray", borderRadius: "10px" }}  item xs={12} md={12} sm={12} lg={12} ><Typography component="div"  variant="h6">Course Name : {obj.courseName}</Typography>
-                 <Typography component="div" variant="p">Course Duration : {obj.courseDuration}</Typography>
-                 <Typography component="div" variant="p">No Of Quizes : {obj.noOfQuiz}</Typography>
-                 <Typography component="div" variant="p">Course Fee : {obj.courseFee}</Typography> <Typography component="div" variant="p">Lead Trainer Id : {obj.trainerId}</Typography>
-                </Grid></div>
-                }):""}
+    <div >
+
+      {
+        isLoading ? <CircularProgress size={100} /> :
+
+          <Container maxWidth='lg' sx={{ margin: '50px 0px' }}>
+
+            <Box sx={{ background: '#EDEDED' }} >
+
+              <Typography variant='h5' align='center' sx={{ background: 'cornflowerblue', color: 'white', padding: '10px' }}>
+                Add Course
+              </Typography>
+
+              <Box sx={{ padding: '20px' }}>
+
+                {isSubmitted ? <Box sx={{ fontSize: '25px', color: 'green', textAlign: 'center', margin: '50px 0px' }}>Congratulations! Course Added Successfully </Box> : null}
+
+                <Grid container spacing={5}>
+
+                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                    <STextField onChange={(e) => {
+                      fillData('courseName', e.target.value);
+                      setIsSubmitted(false);
+                    }
+                    } label='Course Name' fullWidth={true}></STextField>
+                  </Grid>
+
+
+                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                    <SSelect label='Select Course Duration(months)' sourceArr={[8, 10, 12, 14, 16]} func={fillData} selectKey='courseDuration' />
+                  </Grid>
+
+                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                    <SSelect label='Form Status' sourceArr={['Open', 'Close']} func={fillData} selectKey='formStatus' />
+                  </Grid>
+
+                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                    <SSelect label='No. of Quizes' sourceArr={[2, 4, 5, 6, 8, 10]} func={fillData} selectKey='noOfQuizes' />
+                  </Grid>
+
+                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                    <STextField onChange={(e) => fillData('feeInRs', e.target.value)} label='Course Fee (Rs.)' type='number' placeholder='4999'></STextField>
+                  </Grid>
+
+                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                    <STextField onChange={(e) => fillData('leadTrainerId', e.target.value)} label='Lead Trainer ID'></STextField>
+                  </Grid>
+
+                  <Grid item lg={4} md={4} sm={6} xm={12} >
+                    <Box sx={{ display: 'flex' }}>
+                      <STextField onChange={(e) => setAssistantTrainer(e.target.value)}
+                        value={assistantTrainer} label='Assistant Trainers'></STextField>
+                      <Button onClick={(e) => {
+                        setAssistantTrainers([...assistantTrainers, assistantTrainer]);
+                        setAssistantTrainer('');
+                      }} variant='contained' sx={{ marginLeft: '5px' }} >Add</Button>
+                    </Box>
+
+                    <Box sx={{ margin: '10px ' }}>
+                      {
+                        assistantTrainers && assistantTrainers.length > 0 ?
+                          assistantTrainers.map((item, index) => <p key={index}>{index + 1}. {item}</p>) : 'No Assistant Trainers'
+                      }
+                    </Box>
+                  </Grid>
+
                 </Grid>
-                <Grid item xs={12} md={12} sm={12} lg={12} >
-                  <BButton onClick={showBox} label="Add New Course"/>
-                  </Grid>
-               
-         </Grid>
-      </Container>
-      {show? <Container maxWidth="sm" sx={{ textAlign: "center"}}>
-                <Grid container spacing={3} sx={{ marginY: "30px", padding: "30px", backgroundColor: "white", boxShadow: "5px 5px 30px lightgray", borderRadius: "10px" }} >
-                <Grid item xs={12} md={12} sm={12} lg={12} >
-                <Typography m={3} variant="h4">Add New Course</Typography>
-                  <  Input required="required" type="text" value={obj.courseName} onChange={(e)=>fillObject( "courseName" , e.target.value)} label="Course Name"/>
-                  <  Dropdown value={obj.courseDuration} dataSource={duration} onChange={(e)=>fillObject( "courseDuration" , e.target.value)}  label="Course Duration"/>
-                  <  Dropdown value={obj.noOfQuiz} dataSource={quiz} onChange={(e)=>fillObject( "noOfQuiz" , e.target.value)}  label="No of Quiz"/>
-                  < Input value={obj.courseFee} onChange={(e)=>fillObject( "courseFee" , e.target.value)}  label="Fee"/>
-                  <  Input value={obj.trainerId} onChange={(e)=>fillObject( "trainerId" , e.target.value)}  label="Lead Trainer Id"/>
-                  <Input type="text" label="Assisstant Trainer"/>
-                  <CheckBox required="required"  value={obj.isFormOpen} onChange={(e)=>fillObject( "isFormOpen" , e.target.value)} checked="true"  label="Is Form Open"/>
-                  </Grid>
-                 
-                  <Grid item xs={12} md={12} sm={12} lg={12} >
-                  <BButton onClick={add} label="Add"/>
-                  </Grid>
-               
-         </Grid>
-      </Container> : ""
+
+                <Box sx={{ textAlign: 'center' }}>
+                  <Button variant='contained' onClick={submitForm} >Submit Form</Button>
+                </Box>
+
+              </Box>
+
+            </Box>
+
+          </Container>
+
       }
-     
+
+      <Container maxWidth='lg' sx={{ margin: '50px 0px' }}>
+
+        <Box >
+
+          <Typography variant='h5' align='center' sx={{ background: 'cornflowerblue', color: 'white', padding: '10px' }}>
+            Registered Courses
+          </Typography>
+
+          {
+            receivedCourses && receivedCourses.length > 0 ?
+            receivedCourses.map((item,index)=>{
+              return(
+                <div key={index} style={{boxShadow:'5px 5px 10px gray', margin:'50px 0px', padding:'20px'}}>
+
+                    <h2 align='center' style={{marginBottom:'50px'}}>{item.courseName}</h2>
+
+                    <Grid container spacing={4}>
+
+                        <Grid item md={6} xs={12}>
+                            <b>Course Name: </b>{item.courseName}
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                            <b>Course Duration: </b>{item.courseDuration + '  Months'}
+                        </Grid>
+                        
+                        <Grid item md={6} xs={12}>
+                            <b>Form Status: </b>{item.formStatus}
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                            <b>No. of Quizes: </b>{item.noOfQuizes}
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                            <b>Course Fee: </b>{'Rs. ' + item.feeInRs}
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                            <b>Lead Trainer ID: </b>{item.leadTrainerId}
+                        </Grid>
+
+                        <Grid item md={12} xs={12}>
+                            <b>Assistant Trainers: </b>{item.assistantTrainers.map((data,index)=>{
+                              return(
+                                <span key={index} style={{marginRight:'15px'}}>{index + 1}. {data} </span>
+                              )
+                            })}
+                        </Grid>
+
+                    </Grid>
+                </div>
+              )
+            }): null 
+          }
+
+          
+
+        </Box>
+
+      </Container>
+
     </div>
   )
+}
+
+const flexCenter = {
+  display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '30px 0px'
 }

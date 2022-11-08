@@ -1,0 +1,27 @@
+.sideNavbar{
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column; 
+    align-items: center;
+    transition: 1s ease;
+    background-color:conr;    
+}
+
+.controlIcon{
+    margin-top: 20px ;
+    margin-left: 20px;
+}
+
+.linkItem{
+    color: black;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 30px 20px;
+    text-decoration: none;
+    transition: 0.5s ease-in-out;
+}
+
+/* .active{
+    color: orange;
+} */

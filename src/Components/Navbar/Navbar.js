@@ -18,7 +18,6 @@ export default function Navbar({ links }) {
         <div className="navBar">
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <img src="http://cdn.onlinewebfonts.com/svg/img_568523.png" alt="logo" width={40} />
                 <span className="logo">React Forms</span>
             </div>
 

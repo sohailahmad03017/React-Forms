@@ -11,11 +11,13 @@
     justify-content: space-between;
     padding: 10px 20px;
     box-shadow: 4px 4px 10px lightgray;
+    background-color: cornflowerblue;
 }
 
 .logo{
     font-size: 25px;
     font-weight: 500;
+    color: white;
 }
 .navLinks{
     display: flex;
@@ -27,7 +29,7 @@
 }
 
 .link{
-    color:black;
+    color:white;
     text-decoration: none;
     font-size: 20px;
     margin-right: 20px;
@@ -35,7 +37,8 @@
 }
 
 .link:hover {
-    font-weight: bold;
+    color:black;
+    transition: 1s ease-in-out;
 }
 
 .icon{
@@ -43,8 +46,7 @@
 }
 
 .active{
-    border-radius: 20px;
-    font-weight: bold;
+    color: black;
 }
 
 @media screen and (max-width:800px){
@@ -53,7 +55,7 @@
     align-items: center;
     position: fixed;
     z-index: 88;
-    top: 60px;
+    top: 54px;
     right: -300px;
     width: 250px;
     height: 100vh;
@@ -78,5 +80,6 @@
 
 .icon{
     display: block;
+    color:white;
 }
 }
