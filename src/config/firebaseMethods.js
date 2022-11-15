@@ -1,7 +1,7 @@
 import app from "./firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,  onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, ref, set, onValue, push } from "firebase/database";
+import { getDatabase, ref, set, onValue, push, } from "firebase/database";
 
 const auth = getAuth(app);
 const db = getDatabase(app);
@@ -10,7 +10,7 @@ const db = getDatabase(app);
 const user = auth.currentUser;
 
 //Sign Up user with Email and Password
-const signUpUser = ({ name, email, password }) => {
+const signUpUser = ({ name, email, password, category}) => {
 
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -23,6 +23,7 @@ const signUpUser = ({ name, email, password }) => {
           username: name,
           email: email,
           uid: userId,
+          category: category,
         })
           .then(() => { resolve("User Created Successfuly and data is also sent in database") })
           .catch(() => { reject('User created but data is not added in database') });
@@ -57,6 +58,31 @@ const signInUser = ({ email, password }) => {
   })
 }
 
+// Is user Logged In
+let checkUser = () => {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        resolve(uid);
+      } else {
+        reject("No User Logged In");
+      }
+    });
+  });
+};
+
+//Log Out Function
+let signOutUser = ()=>{
+  return new Promise((resolve, reject) => {
+    signOut(auth).then(() => {
+       resolve(auth)
+    }).catch((error) => {
+       reject(error)
+    });
+  })
+
+}
 
 // //Sending data in database
 // const sendData = (dataObj, uid) => {
@@ -75,8 +101,8 @@ const signInUser = ({ email, password }) => {
 let sendData = (data, nodeName) => {
   return new Promise((resolve, reject) => {
     const postListRef = ref(db, `${nodeName}/`);
-    const newPostRef = push(postListRef);
-    set(newPostRef, data)
+    // const newPostRef = push(postListRef);
+    set(postListRef, data)
       .then(() => {
         resolve("Data Sent Successfully")
       })
@@ -109,7 +135,15 @@ let getData = (nodeName) => {
       data ? resolve(data) : reject("Data not Found");
     })
   })
-
 }
 
-export { signUpUser, signInUser, sendData, sendDataWithId, getData }
+let getDataFull = (nodeName) => {
+  return new Promise((resolve, reject) => {
+    const starCountRef = ref(db, `${nodeName}/`);
+    onValue(starCountRef, (snapshot) => {
+      resolve(snapshot.val())
+    })
+  })
+}
+
+export { signUpUser, signInUser, sendData, sendDataWithId, getData,getDataFull, checkUser , signOutUser}

@@ -6,9 +6,15 @@ import SignUp from '../Components/SignUp';
 import CourseForm from '../FormScreens/CourseForm';
 import Dashboard from '../FormScreens/Dashboard';
 import Home from '../FormScreens/Home';
+import Login from '../FormScreens/Login';
 import QuizForm from '../FormScreens/QuizForm';
+import QuizStudent from '../FormScreens/QuizStudent';
+import Result from '../FormScreens/Result';
 import ResultUpdate from '../FormScreens/ResultUpdate';
+import StudentProfile from '../FormScreens/StudentProfile';
 import StudentRegistration from '../FormScreens/StudentRegistration';
+import TrainerRegistration from '../FormScreens/TrainerRegistration';
+
 export default function AppRouter() {
 
   const [links, setLinks] = useState([
@@ -17,39 +23,27 @@ export default function AppRouter() {
       label: 'Student Registration'
     },
     {
+      to: 'trainerRegistration',
+      label: 'Trainer Registration'
+    },
+    {
       to: 'dashboard',
       label: 'Dashboard'
-    }
+    },
   ])
-  // const [links, setLinks] = useState([
-  //   {
-  //     to: '/',
-  //     label: 'Registration',
-  //   },
-  //   {
-  //     to: 'courseForm',
-  //     label: 'Course'
-  //   },
-  //   {
-  //     to: 'quizForm',
-  //     label:'Quiz Questions'
-  //   },
-  //   {
-  //     to:'resultUpdate',
-  //     label:'Result Update'
-  //   }
-  // ])
+
 
   return (
     <>
       <BrowserRouter>
 
-        <Navbar links={links} />
-
         <Routes>
           <Route path='/' element={<Home />}></Route>
           <Route path='studentRegistration' element={<StudentRegistration />} />
           <Route path='dashboard/*' element={<Dashboard />}></Route>
+          <Route path='login' element={<Login />}></Route>
+          <Route path='studentProfile/*' element={<StudentProfile />} />
+          <Route path='result' element={<Result/>}></Route>
         </Routes>
 
       </BrowserRouter>

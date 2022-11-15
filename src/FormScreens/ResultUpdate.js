@@ -1,10 +1,10 @@
-import { Button, Grid, Typography } from '@mui/material'
+import { Button, CircularProgress, Grid, Typography } from '@mui/material'
 import { Box, Container } from '@mui/system'
 import React, { useState } from 'react'
 import SSelect from '../Components/FormComponents/SSelect'
 import Switch from '@mui/material/Switch';
 import STable from '../Components/STable';
-import { sendDataWithId } from '../config/firebaseMethods';
+import { sendData, sendDataWithId } from '../config/firebaseMethods';
 
 export default function ResultUpdate() {
 
@@ -15,39 +15,35 @@ export default function ResultUpdate() {
       totalMarks: 100,
       obtainedMarks: 95,
       studentName: 'Abuzar Thanvi',
-      section:'B',
-      course:'Web & App Development'
+      section: 'B',
     },
     {
       totalMarks: 100,
       obtainedMarks: 85,
       studentName: 'Rehmat Ali',
-      section:'B',
-      course:'Web & App Development'
+      section: 'B',
     },
     {
       totalMarks: 100,
       obtainedMarks: 93,
       studentName: 'Ali Abbas',
-      section:'B',
-      course:'Web & App Development'
+      section: 'B',
     },
     {
       totalMarks: 100,
       obtainedMarks: 90,
       studentName: 'Sohail Ahmad',
-      section:'B',
-      course:'Web & App Development'
+      section: 'B',
     },
     {
       totalMarks: 100,
       obtainedMarks: 75,
       studentName: 'Sami Ullah',
-      section:'B',
-      course:'Web & App Development'
+      section: 'B',
     },
   ])
-  const [Theadings, setTheadings] = useState(['Student Name', 'Total Marks', 'Obtained Marks', 'Section', 'Course Name']);
+  const [Theadings, setTheadings] = useState(['Student Name', 'Total Marks', 'Obtained Marks', 'Section']);
+  const [isLoading, setIsLoading] = useState(false)
 
   let selected = (key, value) => {
     model[key] = value;
@@ -55,11 +51,16 @@ export default function ResultUpdate() {
   }
 
   let sendResult = () => {
-    model[result] = result;
-    // model[tableHeadings] = Theadings;
-    console.log(model)
+    setIsLoading(true)
+    model.showResult = showResult;
+    model.result = result;
+    model.tableHeadings = Theadings;
 
-    // sendDataWithId()
+    sendDataWithId('results', model).then((success) => {
+      setIsLoading(false)
+    }).catch((error)=> {
+      setIsLoading(false);
+    })
   }
   return (
     <div>
@@ -79,18 +80,17 @@ export default function ResultUpdate() {
 
 
               <Grid item lg={6} md={6} sm={6} xm={12}>
-                <SSelect label='Select Course' sourceArr={['Web & App Development']} selectKey='course' func={selected} />
+                <SSelect label='Select Course' sourceArr={['Web & App Development', 'Graphic Designing', 'Digital Literacy']} selectKey='course' func={selected} />
               </Grid>
 
               <Grid item lg={4}>
                 <Switch onChange={(e) => {
-                  model.showResult = e.target.checked
                   setShowResult(e.target.checked);
                 }} ></Switch>
               </Grid>
 
               <Grid item lg={2}>
-                {model.course && showResult && <Button variant='contained' onClick={sendResult}>Upload</Button>}
+                {model.course && <Button variant='contained' onClick={sendResult}>{isLoading? <CircularProgress color='success'/> : 'Upload'}</Button>}
               </Grid>
 
             </Grid>
@@ -101,9 +101,9 @@ export default function ResultUpdate() {
 
       </Container>
 
-      
+
       <Container maxWidth='lg'>
-          {model.course && showResult && <STable rowsData={result} tableHeadings={Theadings}/>}
+        {model.course && <STable rowsData={result} tableHeadings={Theadings} />}
       </Container>
 
     </div>

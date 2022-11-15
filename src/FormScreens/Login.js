@@ -2,10 +2,10 @@ import React from 'react'
 import Navbar from '../Components/Navbar/Navbar'
 import SignIn from '../Components/SignIn'
 
-function Home() {
-  return (
-    <>
-    <Navbar links={[
+export default function Login() {
+    return (
+        <div>
+                <Navbar links={[
           {
             to: 'studentRegistration',
             label: 'Student Registration'
@@ -15,13 +15,12 @@ function Home() {
             label: 'Result'
           },
           {
-            to: 'dashboard',
-            label: 'Dashboard'
+            to: 'login',
+            label: 'Login'
           },
         ]} />
 
-    </>
-  )
+            <SignIn />
+        </div>
+    )
 }
-
-export default Home

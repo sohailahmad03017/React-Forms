@@ -6,6 +6,7 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
+import TuneIcon from '@mui/icons-material/Tune';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -30,6 +31,13 @@ import UpdateIcon from '@mui/icons-material/Update';
 import HomeIcon from '@mui/icons-material/Home';
 import RegisteredStudent from '../FormScreens/RegisteredStudent';
 import WcIcon from '@mui/icons-material/Wc';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddData from '../FormScreens/AddData';
+import TrainerRegistration from '../FormScreens/TrainerRegistration';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { signOutUser } from '../config/firebaseMethods';
+import FormControl from '../FormScreens/FormControl';
 
 
 const drawerWidth = 240;
@@ -103,6 +111,11 @@ export default function SDrawer() {
 
     const navigate = useNavigate();
 
+    const logOutUser = () => {
+        signOutUser().then((success) => {
+            navigate('/login')
+        })
+    }
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -226,6 +239,31 @@ export default function SDrawer() {
                         </ListItemButton>
                     </ListItem>
 
+                    <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('addData')}>
+                        <ListItemButton
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                    color: 'white'
+                                }}
+                            >
+                                <AddBoxIcon />
+
+                            </ListItemIcon>
+
+                            <ListItemText primary="Add Data" sx={{ opacity: open ? 1 : 0 }} />
+
+                        </ListItemButton>
+                    </ListItem>
+
                     <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('registeredStudents')}>
                         <ListItemButton
                             sx={{
@@ -242,7 +280,7 @@ export default function SDrawer() {
                                     color: 'white'
                                 }}
                             >
-                                <WcIcon/>
+                                <WcIcon />
 
                             </ListItemIcon>
 
@@ -251,7 +289,9 @@ export default function SDrawer() {
                         </ListItemButton>
                     </ListItem>
 
-                    <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('/')}>
+                    
+
+                    <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('trainerRegistration')}>
                         <ListItemButton
                             sx={{
                                 minHeight: 48,
@@ -267,11 +307,61 @@ export default function SDrawer() {
                                     color: 'white'
                                 }}
                             >
-                                <HomeIcon />
+                                <SupervisedUserCircleIcon />
 
                             </ListItemIcon>
 
-                            <ListItemText primary="Go to Home" sx={{ opacity: open ? 1 : 0 }} />
+                            <ListItemText primary="Trainer Registration" sx={{ opacity: open ? 1 : 0 }} />
+
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate('formControl')}>
+                        <ListItemButton
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                    color: 'white'
+                                }}
+                            >
+                                <TuneIcon />
+
+                            </ListItemIcon>
+
+                            <ListItemText primary="Form Controls" sx={{ opacity: open ? 1 : 0 }} />
+
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding sx={{ display: 'block' }} onClick={logOutUser}>
+                        <ListItemButton
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                    color: 'white'
+                                }}
+                            >
+                                <LogoutIcon />
+
+                            </ListItemIcon>
+
+                            <ListItemText primary="Log Out" sx={{ opacity: open ? 1 : 0 }} />
 
                         </ListItemButton>
                     </ListItem>
@@ -308,12 +398,15 @@ export default function SDrawer() {
 
             </Drawer>
 
-            <Box variant='div' component="main" sx={{ flexGrow: 1, p: 3, minWidth:'85vw' }}>
+            <Box variant='div' component="main" sx={{ flexGrow: 1, p: 3, width: '100%', paddingTop: '50px' }}>
                 <Routes>
+                    <Route path='addData' element={<AddData />}></Route>
                     <Route path='courseForm' element={<CourseForm />}></Route>
                     <Route path='quizForm' element={<QuizForm />}></Route>
                     <Route path='resultUpdate' element={<ResultUpdate />}></Route>
-                    <Route path='registeredStudents' element={<RegisteredStudent/>} />
+                    <Route path='formControl' element={<FormControl />}></Route>
+                    <Route path='trainerRegistration' element={<TrainerRegistration />} />
+                    <Route path='registeredStudents' element={<RegisteredStudent />} />
                 </Routes>
             </Box>
         </Box>

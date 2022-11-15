@@ -25,7 +25,7 @@ export default function Navbar({ links }) {
 
                 <ul className={activeMenu}>
                     {
-                        links.map((item, index) => <NavLink to={item.to} key={index} className="link" onClick={() => setMenu(!menu)} >{item.label}</NavLink>)
+                        links.map((item, index) => <NavLink to={'/' + item.to} key={index} className="link" onClick={() => setMenu(!menu)} >{item.label}</NavLink>)
                     }
                 </ul>
 

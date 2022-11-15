@@ -8,7 +8,7 @@ import { getData, sendDataWithId } from '../config/firebaseMethods';
 import { dateExtract } from '../config/core/basic';
 import { set } from 'firebase/database';
 
-export default function CourseForm() {
+export default function QuizForm() {
 
   let [model, setModel] = useState({});
   let [receivedCourses, setReceivedCourses] = useState([]);
@@ -129,7 +129,10 @@ export default function CourseForm() {
 
                   <Grid container spacing={3}>
 
-                    {/* npm  */}
+
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <div ><b>Saved Questions: </b>{questionsArr.length}</div>
+                    </Grid>
 
                     <Grid item lg={8} md={8} sm={8}>
                       <STextField value={questionStatement} onChange={(e) => setQuestionStatement(e.target.value)} label='Question'></STextField>

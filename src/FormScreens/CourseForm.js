@@ -74,7 +74,7 @@ export default function CourseForm() {
 
                 <Grid container spacing={5}>
 
-                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                  <Grid item lg={4} md={4} sm={6} xs={12}>
                     <STextField onChange={(e) => {
                       fillData('courseName', e.target.value);
                       setIsSubmitted(false);
@@ -83,27 +83,27 @@ export default function CourseForm() {
                   </Grid>
 
 
-                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                  <Grid item lg={4} md={4} sm={6} xs={12}>
                     <SSelect label='Select Course Duration(months)' sourceArr={[8, 10, 12, 14, 16]} func={fillData} selectKey='courseDuration' />
                   </Grid>
 
-                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                  <Grid item lg={4} md={4} sm={6} xs={12}>
                     <SSelect label='Form Status' sourceArr={['Open', 'Close']} func={fillData} selectKey='formStatus' />
                   </Grid>
 
-                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                  <Grid item lg={4} md={4} sm={6} xs={12}>
                     <SSelect label='No. of Quizes' sourceArr={[2, 4, 5, 6, 8, 10]} func={fillData} selectKey='noOfQuizes' />
                   </Grid>
 
-                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                  <Grid item lg={4} md={4} sm={6} xs={12}>
                     <STextField onChange={(e) => fillData('feeInRs', e.target.value)} label='Course Fee (Rs.)' type='number' placeholder='4999'></STextField>
                   </Grid>
 
-                  <Grid item lg={4} md={4} sm={6} xm={12}>
+                  <Grid item lg={4} md={4} sm={6} xs={12}>
                     <STextField onChange={(e) => fillData('leadTrainerId', e.target.value)} label='Lead Trainer ID'></STextField>
                   </Grid>
 
-                  <Grid item lg={4} md={4} sm={6} xm={12} >
+                  <Grid item lg={4} md={4} sm={6} xs={12} >
                     <Box sx={{ display: 'flex' }}>
                       <STextField onChange={(e) => setAssistantTrainer(e.target.value)}
                         value={assistantTrainer} label='Assistant Trainers'></STextField>

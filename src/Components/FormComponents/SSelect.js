@@ -13,7 +13,9 @@ export default function SSelect(props) {
 
   const handleChange = (event) => {
     setValue(event.target.value);
-    func(selectKey, event.target.value);
+    if(func){
+      func(selectKey, event.target.value);
+    }
   };
 
   return (

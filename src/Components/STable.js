@@ -55,7 +55,6 @@ export default function STable({tableHeadings, rowsData}) {
               <StyledTableCell align="right">{row.totalMarks}</StyledTableCell>
               <StyledTableCell align="right">{row.obtainedMarks}</StyledTableCell>
               <StyledTableCell align="right">{row.section}</StyledTableCell>
-              <StyledTableCell align="right">{row.course}</StyledTableCell>
             </StyledTableRow>
           ))}
 
